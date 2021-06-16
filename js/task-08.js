@@ -1,40 +1,46 @@
 const refs = {
-  inputRef: document.querySelector("#controls input"),
+  inputRef: document.querySelector('#controls input'),
   createBtn: document.querySelector('#controls button[data-action="render"]'),
   deleteBtn: document.querySelector('#controls button[data-action="destroy"]'),
-  divRef: document.querySelector("#boxes"),
+  divRef: document.querySelector('#boxes'),
 };
 
 const randomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
 
-refs.createBtn.addEventListener("click", onCreateBtnClick);
+refs.createBtn.addEventListener('click', onCreateBtnClick);
 
 function onCreateBtnClick(event) {
   const inputValue = refs.inputRef.value;
   createBoxes(inputValue);
 }
 
+refs.deleteBtn.addEventListener('click', destroyBoxes);
+
 function createBoxes(amount) {
   let width = 30;
   let height = 30;
 
   for (let i = 0; i < amount; i++) {
-    const r = randomNumber(0, 100);
-    const g = randomNumber(0, 100);
-    const b = randomNumber(0, 100);
+    const rgb = [
+      randomNumber(0, 256),
+      randomNumber(0, 256),
+      randomNumber(0, 256),
+    ];
 
-    const divTamplate =
-      `<div width=${width}` +
-      ` height=${height}` +
-      ` color=rgb(${r}%, ${g}%, ${b}%)></div>`;
+    const newDiv = document.createElement('div');
+    newDiv.style.background = `rgb(${rgb})`;
+    newDiv.style.width = `${width}px`;
+    newDiv.style.height = `${height}px`;
 
-    console.log(divTamplate);
-    refs.divRef.insertAdjacentHTML("beforeend", divTamplate);
-    console.log(refs.divRef);
+    refs.divRef.append(newDiv);
+
     width += 10;
     height += 10;
   }
 }
 
-function destroyBoxes() {}
+function destroyBoxes() {
+  const divList = refs.divRef.querySelectorAll('div');
+  divList.forEach(e => e.remove());
+}
